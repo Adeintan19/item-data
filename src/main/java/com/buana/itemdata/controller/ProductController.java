@@ -8,15 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @Slf4j
-@RequestMapping("api/v1/product")
+@RequestMapping("api/product")
 public class ProductController {
     @Autowired
     CustomResponse response;
@@ -32,7 +29,20 @@ public class ProductController {
              CustomResponse responseService = productService.insertProduct(products);
             return new ResponseEntity<>(responseService, HttpStatus.resolve(responseService.getHttpCode()));
         } catch (Exception e) {
-             return new ResponseEntity<>(response, HttpStatus.valueOf(response.getHttpCode()));
+            CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
+            return new ResponseEntity<>(response1, HttpStatus.valueOf(response1.getHttpCode()));
         }
+    }
+
+    @GetMapping(value = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> searchByName(@RequestParam String productName){
+        try{
+            CustomResponse responseService = productService.inquiryByName(productName);
+            return new ResponseEntity<>(responseService, HttpStatus.valueOf(responseService.getHttpCode()));
+        }catch (Exception e){
+            CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
+            return new ResponseEntity<>(response1, HttpStatus.valueOf(response1.getHttpCode()));
+        }
+
     }
 }

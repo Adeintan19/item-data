@@ -28,6 +28,7 @@ public class Products implements Serializable {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
+    @JsonIgnore
     @Column(name = "created_at")
     private Date createdAt;
 

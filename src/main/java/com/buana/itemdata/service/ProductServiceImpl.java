@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,8 +23,8 @@ public class ProductServiceImpl implements ProductService {
     public CustomResponse insertProduct(Products productsRequest) {
         try {
             Optional<Products> byProductCode = productRepository.findByProductCode(productsRequest.getProductCode());
-            if(byProductCode.isPresent()){
-                return new CustomResponse(HttpStatus.BAD_REQUEST.value(),400,"Product code already exist",null);
+            if (byProductCode.isPresent()) {
+                return new CustomResponse(HttpStatus.BAD_REQUEST.value(), 400, "Product code already exist", null);
             }
             //mapping data
             Products product = new Products();
@@ -34,10 +36,21 @@ public class ProductServiceImpl implements ProductService {
             productRepository.save(product);
             //return success
             log.info("insert product succesfully");
-            return new CustomResponse(HttpStatus.OK.value(),200,"SUCCESS",product);
+            return new CustomResponse(HttpStatus.OK.value(), 200, "SUCCESS", product);
         } catch (Exception e) {
             return new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), 400, "ERROR", null);
 
         }
+    }
+
+    @Override
+    public CustomResponse inquiryByName(String productsNameRequest) {
+        try {
+            List<Products> byProductNameContaining = productRepository.findByProductNameContaining(productsNameRequest);
+            return new CustomResponse(HttpStatus.OK.value(), 200, "SUCCESS", byProductNameContaining);
+        } catch (Exception e) {
+            return new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), 400, "ERROR", null);
+        }
+
     }
 }
