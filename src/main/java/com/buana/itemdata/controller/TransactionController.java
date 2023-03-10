@@ -1,7 +1,6 @@
 package com.buana.itemdata.controller;
 
 import com.buana.itemdata.dto.CustomResponse;
-import com.buana.itemdata.model.Products;
 import com.buana.itemdata.model.Transaction;
 import com.buana.itemdata.service.TransactionService;
 import lombok.extern.slf4j.Slf4j;
@@ -9,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @Slf4j
@@ -28,6 +26,42 @@ public class TransactionController {
         try {
             //masuk ke logic service
             CustomResponse responseService = transactionService.insertTransaction(transaction);
+            return new ResponseEntity<>(responseService, HttpStatus.resolve(responseService.getHttpCode()));
+        } catch (Exception e) {
+            CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
+            return new ResponseEntity<>(response1, HttpStatus.valueOf(response1.getHttpCode()));
+        }
+    }
+
+    @PostMapping(value = "/addMore", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomResponse> addMoreTransaction(@RequestBody Transaction transaction) {
+        try {
+            //masuk ke logic service
+            CustomResponse responseService = transactionService.addMoreTransaction(transaction);
+            return new ResponseEntity<>(responseService, HttpStatus.resolve(responseService.getHttpCode()));
+        } catch (Exception e) {
+            CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
+            return new ResponseEntity<>(response1, HttpStatus.valueOf(response1.getHttpCode()));
+        }
+    }
+
+    @PostMapping(value = "/remove", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomResponse> removeItem(@RequestBody Transaction transaction) {
+        try {
+            //masuk ke logic service
+            CustomResponse responseService = transactionService.removeItem(transaction.getProductCode(),transaction.getTransactionId());
+            return new ResponseEntity<>(responseService, HttpStatus.resolve(responseService.getHttpCode()));
+        } catch (Exception e) {
+            CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
+            return new ResponseEntity<>(response1, HttpStatus.valueOf(response1.getHttpCode()));
+        }
+    }
+
+    @PostMapping(value = "/finalize", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomResponse> finalizeTransaction(@RequestBody UUID transactionId) {
+        try {
+            //masuk ke logic service
+            CustomResponse responseService = transactionService.finalizeTransaction(transactionId);
             return new ResponseEntity<>(responseService, HttpStatus.resolve(responseService.getHttpCode()));
         } catch (Exception e) {
             CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
