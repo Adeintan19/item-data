@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @Table(name = "transaction")
-public class Transaction implements Serializable {
+public class TransactionRequest implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)

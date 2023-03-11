@@ -1,6 +1,7 @@
 package com.buana.itemdata.service;
 
 import com.buana.itemdata.dto.CustomResponse;
+import com.buana.itemdata.dto.ProductRequest;
 import com.buana.itemdata.model.Products;
 import com.buana.itemdata.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class ProductServiceImpl implements ProductService {
     ProductRepository productRepository;
 
     @Override
-    public CustomResponse insertProduct(Products productsRequest) {
+    public CustomResponse insertProduct(ProductRequest productsRequest) {
         try {
             Optional<Products> byProductCode = productRepository.findByProductCode(productsRequest.getProductCode());
             if (byProductCode.isPresent()) {
