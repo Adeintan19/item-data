@@ -87,22 +87,36 @@ public class TransactionServiceImpl implements TransactionService {
     public CustomResponse removeItem(String productCode, UUID transactionId) {
         try {
             Optional<Transaction> byTransactionIdAndProductCode = transactionRepository.findByTransactionIdAndProductCode(transactionId, productCode);
-            if(byTransactionIdAndProductCode.isPresent()){
+            if (byTransactionIdAndProductCode.isPresent()) {
                 transactionRepository.delete(byTransactionIdAndProductCode.get());
-                return new CustomResponse(HttpStatus.OK.value(), 200,"item berhasil dihapus",null);
+                return new CustomResponse(HttpStatus.OK.value(), 200, "item berhasil dihapus", null);
             } else {
-            return new CustomResponse(HttpStatus.BAD_REQUEST.value(), 400,"data tidak ditemukan", null);}
+                return new CustomResponse(HttpStatus.BAD_REQUEST.value(), 400, "data tidak ditemukan", null);
+            }
         } catch (Exception e) {
-            return new CustomResponse(HttpStatus.BAD_REQUEST.value(), 400,e.getMessage(), null);
-    }
+            return new CustomResponse(HttpStatus.BAD_REQUEST.value(), 400, e.getMessage(), null);
+        }
     }
 
     @Override
     public CustomResponse finalizeTransaction(UUID transactionId) {
         try {
-            return null;
+            List<Transaction> byTransactionId = transactionRepository.findByTransactionId(transactionId);
+            if (byTransactionId.isEmpty()) {
+                return null;
+                //return data not found
+            }
+
+            BigDecimal totalBelanja = BigDecimal.ZERO;
+            for (Transaction trans : byTransactionId) {
+                totalBelanja =totalBelanja.add(trans.getTotal());
+            }
+            //return success
+            return new CustomResponse(HttpStatus.OK.value(), 200, "Success", totalBelanja);
+
         } catch (Exception e) {
             return null;
+            //return error
         }
     }
 }

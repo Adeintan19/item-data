@@ -58,10 +58,10 @@ public class TransactionController {
     }
 
     @PostMapping(value = "/finalize", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CustomResponse> finalizeTransaction(@RequestBody UUID transactionId) {
+    public ResponseEntity<CustomResponse> finalizeTransaction(@RequestBody Transaction transaction) {
         try {
             //masuk ke logic service
-            CustomResponse responseService = transactionService.finalizeTransaction(transactionId);
+            CustomResponse responseService = transactionService.finalizeTransaction(transaction.getTransactionId());
             return new ResponseEntity<>(responseService, HttpStatus.resolve(responseService.getHttpCode()));
         } catch (Exception e) {
             CustomResponse response1 = new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),500, e.getMessage(), null);
