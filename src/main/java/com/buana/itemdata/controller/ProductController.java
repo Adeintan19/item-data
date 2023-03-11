@@ -2,7 +2,6 @@ package com.buana.itemdata.controller;
 
 import com.buana.itemdata.dto.CustomResponse;
 import com.buana.itemdata.dto.ProductRequest;
-import com.buana.itemdata.model.Products;
 import com.buana.itemdata.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 
 @RestController
@@ -21,7 +22,7 @@ public class ProductController {
     ProductService productService;
 
     @PostMapping(value = "/insert", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CustomResponse> insertProduct(@RequestBody ProductRequest products) {
+    public ResponseEntity<CustomResponse> insertProduct(@Valid @RequestBody ProductRequest products) {
         try {
             //masuk ke logic service
              CustomResponse responseService = productService.insertProduct(products);
