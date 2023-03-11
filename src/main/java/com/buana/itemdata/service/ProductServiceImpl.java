@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
             log.info("insert product succesfully");
             return new CustomResponse(HttpStatus.OK.value(), 200, "SUCCESS", product);
         } catch (Exception e) {
-            return new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), 400, "ERROR", null);
+            return new CustomResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), 400, e.getMessage(), null);
 
         }
     }
